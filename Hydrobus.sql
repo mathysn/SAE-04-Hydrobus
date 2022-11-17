@@ -35,10 +35,8 @@ CREATE TABLE changement_reservoir(
     id_changement INT(25) AUTO_INCREMENT,
     date_changement DATE NOT NULL,
     id_bus INT(25),
-    id_reservoir INT(25),
     PRIMARY KEY (id_changement),
-    CONSTRAINT FOREIGN KEY (id_bus) REFERENCES bus(id_bus),
-    FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir)
+    CONSTRAINT FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
 );
 
 CREATE TABLE revision(
@@ -75,9 +73,9 @@ CREATE TABLE kilometrage(
 );
 
 INSERT INTO modele (code_modele, libelle_modele, infos_modele, volume_reservoir)
-VALUES (NULL, 'Reservoir300', 'Un réservoir de volume 300L', 300),
-       (NULL, 'Reservoir200', 'Un réservoir de volume 200L', 200.00),
-       (NULL, 'Reservoir600', 'Un réservoir de volume 600L', 600);
+VALUES (NULL, 'Reservoir300', "Un réservoir de volume 300L", 300),
+       (NULL, 'Reservoir200', "Un réservoir de volume 300L", 200.00),
+       (NULL, 'Reservoir600', "Un réservoir de volume 300L", 600);
 
 INSERT INTO reservoir (id_reservoir, code_modele)
 VALUES (NULL, 2),
@@ -89,5 +87,30 @@ VALUES (NULL, '2011-12-02', 1677.25, 1),
        (NULL, '2012-03-14', 4300, 2),
        (NULL, '2022-04-27', 0, 3);
 
-INSERT INTO changement_reservoir (id_changement, date_changement, id_bus, id_reservoir)
-VALUES (NULL, '')
+INSERT INTO changement_reservoir (id_changement, date_changement, id_bus)
+VALUES (NULL, '2050-03-14', 2),
+       (NULL, '2002-11-22', 1),
+       (NULL, '2020-09-10', 3);
+
+INSERT INTO revision (id_revision, descriptif_revision, date_revision, id_reservoir)
+VALUES (NULL, 'RAS', '2020-09-10', 2),
+       (NULL, 'rien ne va', '2222-02-22', 1);
+
+INSERT INTO type_incident (id_type_incident, infos_type_incident)
+VALUES (NULL, "carambolage");
+
+INSERT INTO incident (id_incident, date_incident, id_bus, id_type_incident)
+VALUES (NULL, '2020-12-20', 2, 1),
+       (NULL, '2021-12-20', 3, 1);
+
+INSERT INTO kilometrage (date_periode, nombre_km, id_bus)
+VALUES ('2020-12-12', 1200.5, 1);
+
+SELECT * FROM modele;
+SELECT * FROM reservoir;
+SELECT * FROM bus;
+SELECT * FROM changement_reservoir;
+SELECT * FROM revision;
+SELECT * FROM type_incident;
+SELECT * FROM incident;
+SELECT * FROM kilometrage;
