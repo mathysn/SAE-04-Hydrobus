@@ -121,22 +121,22 @@ VALUES ('2020-12-12', 1200.5, 1),
        ('2021-07-12', 10526, 3),
        ('2021-08-12', 3020, 3);
 
-SELECT b.*, COUNT(c.id_bus) AS nb_changement
+SELECT b.*, COUNT(c.id_bus) AS nb_changement -- Fait par Mathys
 FROM bus b
 LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus
 GROUP BY b.id_bus;
 
-SELECT b.*, SUM(k.nombre_km) AS nb_km_total
+SELECT b.*, SUM(k.nombre_km) AS nb_km_total -- Fait par Tom
 FROM bus b
 LEFT JOIN kilometrage k ON b.id_bus = k.id_bus
 GROUP BY b.id_bus;
 
-SELECT b.*, MAX(k.nombre_km) AS nb_km_max
+SELECT b.*, MAX(k.nombre_km) AS nb_km_max -- Fait par Ewan
 FROM bus b
 LEFT JOIN kilometrage k ON b.id_bus = k.id_bus
 GROUP BY b.id_bus;
 
-SELECT res.*, COUNT(revision.id_revision) AS nb_revision
+SELECT res.*, COUNT(revision.id_revision) AS nb_revision -- Fait par Lucas
 FROM reservoir res
 LEFT JOIN revision ON res.id_reservoir = revision.id_reservoir
 GROUP BY res.id_reservoir;
