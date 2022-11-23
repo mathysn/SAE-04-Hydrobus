@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Afficher les meubles</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="filters w-25">
+    <h4>Filtres :</h4>
+
+    <p>Meubles dont le nom est composé de : </p>
+    <input id="name-filter" class="form-control w-50" type="text" size="18" value="" placeholder="Recherche">
+    <div class="custom-control custom-switch">
+      <input type="checkbox" class="custom-control-input" id="customSwitch1">
+      <label class="custom-control-label" for="customSwitch1">nom</label>
+    </div>
+
+    <div class="custom-control custom-switch">
+      <input type="checkbox" class="custom-control-input" id="customSwitch2">
+      <label class="custom-control-label" for="customSwitch2">type</label>
+    </div>
+
+    <div class="prix">
+        <h5>Prix: </h5>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+            <input id="min" class="form-control" type="text" size="18" value="" placeholder="min">
+            </div>
+            <div class="form-group col-md-6">
+            <p class="col-sm-3">à</p>
+            </div>
+            <div class="form-group col-md-6">
+            <input id="max" class="form-control col-md-2" type="text" size="18" value="" placeholder="max">
+            </div>
+        </div>
+    </div>
+
+    <label class="custom-control-label" for="dateFab">date de fabrication</label>
+    <input id="dateFab" class="form-control w-50" type="date" size="18" value="" placeholder="date de fabrication">
+
+    <div class="custom-control custom-switch w-50">
+        <label class="custom-control-label" for="couleur">couleur</label>
+        <input id="couleur" class="form-control" type="text" size="18" value="" placeholder="couleur">
+    </div>
+
+    <div class="custom-control custom-switch w-50">
+        <label class="custom-control-label" for="materiaux">matériaux</label>
+        <input id="materiaux" class="form-control" type="text" size="18" value="" placeholder="matériaux">
+    </div>
+
+    <input class="btn btn-primary" type="submit" value="Filtrer" name="Filtrer">
+</div>
+
+<br><br>
+
+<div class="head">
+    <h3>Meubles</h3>
+    <a type="button" class="btn btn-outline-success" href="/meubles-cards/add">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg>
+    Ajouter</a>
+</div>
+
+<br><br>
+
+<div class="container-fluid row">
+    {% for ligne in meubles %}
+        <div class="card bg-light mb-3 cards" style="width: 24rem;">
+            <div class="card-header">{{ type_meubles(ligne.typeMeuble_id).libelle_type }}</div>
+            <div class="card-body">
+                <h5 class="card-title">#{{ ligne.id }} | <b>{{ ligne.nom }}</b></h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><b>type de meuble :</b> {{ type_meubles(ligne.typeMeuble_id).libelle }}</li>
+                    <li class="list-group-item"><b>Prix :</b> {{ ligne.prix }}€</li>
+                    <li class="list-group-item"><b>Date de fabrication:</b> {{ ligne.dateFabrication }}</li>
+                    <li class="list-group-item"><b>Couleur:</b> {{ ligne.couleur }}</li>
+                    <li class="list-group-item"><b>Matériaux:</b> {{ ligne.materiaux }}</li>
+                </ul>
+            </div>
+            <div class="card-body buttons">
+                <a type="button" class="btn btn-outline-warning" href="/meubles-cards/edit?id={{ ligne.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                    </svg> &nbsp;Editer
+                </a>&nbsp;
+                <a type="button" class="btn btn-outline-danger" href="/meubles-cards/delete?id={{ ligne.id }}" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                    </svg>
+                    &nbsp;Supprimer</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

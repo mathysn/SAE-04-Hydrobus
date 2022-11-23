@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>modifier un article</title>
+{% endblock %}
+
+{% block body %}
+  <h2 class="text-align-center">modifier un article</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form method="post" action="/meubles/edit">
+    <fieldset>
+        <div class="container formulaire w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Meuble</legend>
+                <div class="form-group row margin-bot">
+                    <label for="nom" class="col-sm-3 col-form-label margin-left">nom</label>
+                    <div class="col-sm-6">
+                        <input id="nom" class="form-control" type="text" name="nom" size="18" value="{{meubles.nom}}">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="type_meubles_list" class="col-sm-3 col-form-label margin-left">type de meuble</label>
+                    <div class="col-sm-6">
+                        <select id="type_meubles_list" class="form-control" name="type_meubles_id" required>
+                            {% for type in type_meubles %}
+                            <option value="{{ type.id }}" {% if type.id == meubles.type_ %}selected{% endif %} > {{ type.libelle }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="prix" class="col-sm-3 col-form-label margin-left">Prix (€)</label>
+                    <div class="col-sm-6">
+                        <input id="prix" class="form-control" type="text" name="prix" size="18" value="{{meubles.prix}}">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="dateFabricaton" class="col-sm-3 col-form-label margin-left">Date Fabrication</label>
+                    <div class="col-sm-6">
+                        <input id="dateFabricaton" class="form-control" type="date" name="dateFabrication" size="18" value="{{meubles.dateFabrication}}">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="couleur" class="col-sm-3 col-form-label margin-left">Couleur</label>
+                    <div class="col-sm-6">
+                        <input id="couleur" class="form-control" type="text" name="couleur" size="18" value="{{meubles.couleur}}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="materiaux" class="col-sm-3 col-form-label margin-left">Matériaux</label>
+                    <div class="col-sm-6">
+                        <input id="materiaux" class="form-control" type="text" name="materiaux" size="18" value="{{meubles.materiaux}}">
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Creer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+  </form>
+{% endblock %}

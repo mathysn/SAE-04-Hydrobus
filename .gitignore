@@ -1,7 +1,7 @@
 bdd-run.txt
-.idea
-.venv
-/shelf/
-/workspace.xml
-/dataSources/
-/dataSources.local.xml
+# .idea
+# .venv
+# /shelf/
+# /workspace.xml
+# /dataSources/
+# /dataSources.local.xml

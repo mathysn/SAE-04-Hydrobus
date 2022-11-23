@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>modifier un type de meuble</title>
+{% endblock %}
+
+{% block body %}
+  <h2>Modifier un type de meuble</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form method="post" action="/type-meubles/edit">
+
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Modifier un type de meuble</legend>
+                <input type="hidden" name="id" size="18" value="{{ type_meuble.id }}" id="id">
+                <div class="form-group row margin-bot">
+                    <label for="libelle" class="col-sm-3 col-form-label margin-left">libelle</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="libelle" size="18" value="{{ type_meuble.libelle }}" id="libelle">
+                    </div>
+                </div>
+
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Modifier" name="Modifier">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+  </form>
+{% endblock %}

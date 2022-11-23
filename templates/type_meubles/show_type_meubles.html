@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>afficher les types de meubles</title>
+{% endblock %}
+
+{% block body %}
+<br><br>
+<div class="head">
+    <h3>Types de meubles</h3>
+    <a type="button" class="btn btn-outline-success" href="/type-meubles/add">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg>
+        Ajouter</a>
+</div>
+<br><br>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>id</th>
+            <th>designation</th>
+            <th>opération</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if types_meuble | length >= 1 %}
+        {% for ligne in types_meuble %}
+           <tr>
+                  <td>{{ ligne.id }}</td>
+                  <td>{{ ligne.libelle }}</td>
+                  <td>
+                      <button class="btn btn-warning btn-sm"><a href="/type-meubles/edit?id={{ ligne.id }}&amp;param2={{ligne.libelle}}"><span class="edit-button">editer</span></a></button>
+                      <button class="btn btn-danger btn-sm"><a href="/type-meubles/delete?id={{ ligne.id }}" ><span class="delete-button">supprimer</span></a></button>
+                  </td>
+           </tr>
+        {% endfor %}
+    {% else %}
+            <tr>
+                  <td>
+                      pas de type de meuble
+                  </td>
+           </tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}

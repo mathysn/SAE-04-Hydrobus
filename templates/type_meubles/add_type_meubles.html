@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>ajouter un type de meuble</title>
+{% endblock %}
+
+{% block body %}
+    <div class="head">
+        <h2 class="text-align-center">Ajout d'un type de meuble</h2>
+        {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+    </div>
+    <form method="post" action="/type-meubles/add" >
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Créer un type de meuble</legend>
+                <div class="form-group row margin-bot">
+                    <label for="libelle" class="col-sm-3 col-form-label margin-left">libelle</label>
+                    <div class="col-sm-6">
+                        <input required="required" type="text" class="form-control" name="libelle" size="18" value="" id="libelle">
+                    </div>
+                </div>
+
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Créer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    </form>
+{% endblock %}

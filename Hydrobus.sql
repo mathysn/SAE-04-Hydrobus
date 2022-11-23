@@ -83,8 +83,8 @@ VALUES (NULL, 2),
        (NULL, 1);
 
 INSERT INTO bus (id_bus, date_achat, conso_annuelle, id_reservoir)
-VALUES (NULL, '2011-12-02', 1677.25, 1),
-       (NULL, '2012-03-14', 4300, 2),
+VALUES (NULL, '2011-12-02', 1677.25, 2),
+       (NULL, '2012-03-14', 4300, 1),
        (NULL, '2022-04-27', 0, 3);
 
 INSERT INTO changement_reservoir (id_changement, date_changement, id_bus)
@@ -121,7 +121,7 @@ VALUES ('2020-12-12', 1200.5, 1),
        ('2021-07-12', 10526, 3),
        ('2021-08-12', 3020, 3);
 
-SELECT b.*, COUNT(c.id_bus) AS nb_changement -- Fait par Mathys
+/*SELECT b.*, COUNT(c.id_bus) AS nb_changement -- Fait par Mathys
 FROM bus b
 LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus
 GROUP BY b.id_bus;
@@ -139,4 +139,4 @@ GROUP BY b.id_bus;
 SELECT res.*, COUNT(revision.id_revision) AS nb_revision -- Fait par Lucas
 FROM reservoir res
 LEFT JOIN revision ON res.id_reservoir = revision.id_reservoir
-GROUP BY res.id_reservoir;
+GROUP BY res.id_reservoir;*/

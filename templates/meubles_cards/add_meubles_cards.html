@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Ajouter un article</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="head">
+        <h2>Ajout d'un article</h2>
+        {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <form method="post" action="/meubles-cards/add">
+    </div>
+
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Meuble</legend>
+                <div class="form-group row margin-bot">
+                    <label for="nom" class="col-sm-3 col-form-label margin-left">nom</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="nom" class="form-control" type="text" name="nom" size="18" value="" placeholder="Saisir le nom du meuble">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="type_meuble_list" class="col-sm-3 col-form-label margin-left">type de meuble</label>
+                    <div class="col-sm-6">
+                        <select id="type_meuble_list" class="form-control" name="type_meubles_id" required>
+                        <option value="">Sélectionner un type de meuble</option>
+                        {% for type in type_meubles %}
+                             <option value="{{ type.id }}"> {{ type.libelle }} </option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="prix" class="col-sm-3 col-form-label margin-left">Prix</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="prix" class="form-control" type="text" name="prix" size="18" value="" placeholder="Saisir un prix">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="dateFabricaton" class="col-sm-3 col-form-label margin-left">Date Fabrication</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="dateFabricaton" class="form-control" type="date" name="dateFabrication" size="18" value="" placeholder="Saisir une date de fabrication">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="couleur" class="col-sm-3 col-form-label margin-left">Couleur</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="couleur" class="form-control" type="text" name="couleur" size="18" value="" placeholder="Saisir une couleur">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="materiaux" class="col-sm-3 col-form-label margin-left">Matériaux</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="materiaux" class="form-control" type="text" name="materiaux" size="18" value="" placeholder="Saisir un matériaux">
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Creer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
