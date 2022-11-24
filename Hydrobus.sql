@@ -24,7 +24,7 @@ CREATE TABLE reservoir(
 
 CREATE TABLE bus(
     id_bus INT(25) AUTO_INCREMENT,
-    date_achat DATE,
+    date_achat DATE NOT NULL,
     conso_annuelle DECIMAL(7,2),
     id_reservoir INT(25),
     PRIMARY KEY (id_bus),
@@ -42,7 +42,7 @@ CREATE TABLE changement_reservoir(
 CREATE TABLE revision(
     id_revision INT(25) AUTO_INCREMENT,
     descriptif_revision VARCHAR(255),
-    date_revision DATE,
+    date_revision DATE NOT NULL,
     id_reservoir INT(25),
     PRIMARY KEY (id_revision),
     FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir)
@@ -65,10 +65,11 @@ CREATE TABLE incident(
 );
 
 CREATE TABLE kilometrage(
-    date_periode DATE,
+    id_kilometrage INT(25) AUTO_INCREMENT,
+    date_periode DATE NOT NULL,
     nombre_km DECIMAL(7,2),
     id_bus INT(25),
-    PRIMARY KEY (date_periode),
+    PRIMARY KEY (id_kilometrage),
     FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
 );
 
@@ -99,27 +100,27 @@ VALUES (NULL, '2050-03-14', 2),
 
 INSERT INTO revision (id_revision, descriptif_revision, date_revision, id_reservoir)
 VALUES (NULL, 'RAS', '2020-09-10', 2),
-       (NULL, 'rien ne va', '2222-02-22', 1),
+       (NULL, 'R<ien ne va', '2222-02-22', 1),
        (NULL, 'RAS', '2222-02-22', 3),
-       (NULL, "moteur à changer", '2222-02-22', 2);
+       (NULL, "Moteur à changer", '2222-02-22', 2);
 
 INSERT INTO type_incident (id_type_incident, infos_type_incident)
-VALUES (NULL, "carambolage");
+VALUES (NULL, "Carambolage");
 
 INSERT INTO incident (id_incident, date_incident, id_bus, id_type_incident)
 VALUES (NULL, '2020-12-20', 2, 1),
        (NULL, '2021-12-20', 3, 1);
 
-INSERT INTO kilometrage (date_periode, nombre_km, id_bus)
-VALUES ('2020-12-12', 1200.5, 1),
-       ('2021-01-12', 3000, 1),
-       ('2021-02-12', 231, 1),
-       ('2021-03-12', 5425, 1),
-       ('2021-04-12', 3020, 2),
-       ('2021-05-12', 545, 2),
-       ('2021-06-12', 1535, 2),
-       ('2021-07-12', 10526, 3),
-       ('2021-08-12', 3020, 3);
+INSERT INTO kilometrage (id_kilometrage, date_periode, nombre_km, id_bus)
+VALUES (NULL, '2020-12-12', 1200.5, 1),
+       (NULL, '2021-01-12', 3000, 1),
+       (NULL, '2021-02-12', 231, 1),
+       (NULL, '2021-03-12', 5425, 1),
+       (NULL, '2021-04-12', 3020, 2),
+       (NULL, '2021-05-12', 545, 2),
+       (NULL, '2021-06-12', 1535, 2),
+       (NULL, '2021-07-12', 10526, 3),
+       (NULL, '2021-08-12', 3020, 3);
 
 /*SELECT b.*, COUNT(c.id_bus) AS nb_changement -- Fait par Mathys
 FROM bus b

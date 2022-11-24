@@ -1,13 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Afficher les Bus</title>
+    <title>Afficher les réservoirs</title>
 {% endblock %}
 
 {% block body %}
 <br><br>
 <div class="head">
-    <h3>Bus</h3>
+    <h3>Réservoirs</h3>
     <a type="button" class="btn btn-outline-success" href="/bus/add">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
@@ -20,32 +20,26 @@
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>Date d'achat</th>
-                <th>Conso annuelle</th>
-                <th>ID Réservoir</th>
-                <th>Changements de réservoir</th>
+                <th>Modèle</th>
                 <th>Opérations</th>
             </tr>
         </thead>
         <tbody>
-        {% if bus | length >= 1 %}
-            {% for ligne in bus %}
+        {% if reservoir | length >= 1 %}
+            {% for ligne in reservoir %}
                 <tr>
-                    <td>{{ ligne.id_bus }}</td>
-                    <td>{{ ligne.date_achat }}</td>
-                    <td>{{ ligne.conso_annuelle }}</td>
                     <td>{{ ligne.id_reservoir }}</td>
-                    <td>{{ ligne.nb_changement }}</td>
+                    <td>{{ ligne.libelle_modele }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id_bus }}&amp;param2={{ligne.libelle}}"><span class="edit-button">editer</span></a></button>
-                        <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id_bus }}" ><span class="delete-button">supprimer</span></a></button>
+                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id }}&amp;param2={{ligne.libelle}}"><span class="edit-button">editer</span></a></button>
+                        <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id }}" ><span class="delete-button">supprimer</span></a></button>
                     </td>
                 </tr>
             {% endfor %}
         {% else %}
                 <tr>
                         <td>
-                            pas de bus
+                            Pas de réservoir
                         </td>
                 </tr>
         {% endif %}

@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Ajouter un bus</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="head">
+        <h2>Ajout d'un incident</h2>
+        {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <form method="post" action="/bus/add">
+    </div>
+
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Incident</legend>
+                <div class="form-group row margin-bot">
+                    <label for="date-incident" class="col-sm-3 col-form-label margin-left">Date d'incident</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="date-incident" class="form-control" type="date" name="date-incident" size="18" value="" placeholder="Saisir la date d'achat du bus">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="id-bus" class="col-sm-3 col-form-label margin-left">ID Bus</label>
+                    <div class="col-sm-6">
+                        <select id="id-bus" class="form-control" name="id-bus" required>
+                            <option value="">Sélectionner le bus</option>
+                            {% for b in bus %}
+                                <option value="{{ b.id_bus }}"> {{ b.id_bus }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="incident-id" class="col-sm-3 col-form-label margin-left">Type d'incident</label>
+                    <div class="col-sm-6">
+                        <select id="incident-id" class="form-control" name="incident-id" required>
+                            <option value="">Sélectionner un incident</option>
+                            {% for t in type_incident %}
+                                <option value="{{ t.id_type_incident }}"> {{ t.infos_type_incident }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Creer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
