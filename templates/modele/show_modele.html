@@ -1,14 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Afficher les réservoirs</title>
+    <title>Afficher les modèles</title>
 {% endblock %}
 
 {% block body %}
 <br><br>
 <div class="head">
-    <h3>Réservoirs</h3>
-    <a type="button" class="btn btn-outline-success" href="/reservoir/add">
+    <h3>Modèles</h3>
+    <a type="button" class="btn btn-outline-success" href="/modele/add">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
         </svg>
@@ -20,28 +20,28 @@
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>Volume</th>
-                <th>Modèle</th>
+                <th>Libellé</th>
+                <th>Informations</th>
                 <th>Opérations</th>
             </tr>
         </thead>
         <tbody>
-        {% if reservoir | length >= 1 %}
-            {% for ligne in reservoir %}
+        {% if modele | length >= 1 %}
+            {% for ligne in modele %}
                 <tr>
-                    <td>{{ ligne.id_reservoir }}</td>
-                    <td>{{ ligne.volume_reservoir }} L</td>
+                    <td>{{ ligne.code_modele }}</td>
                     <td>{{ ligne.libelle_modele }}</td>
+                    <td>{{ ligne.infos_modele }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
-                        <button class="btn btn-danger btn-sm"><a href="/reservoir/delete?id={{ ligne.id_reservoir }}" ><span class="delete-button">Supprimer</span></a></button>
+                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.code_modele }}&amp;param2={{ligne.libelle_modele}}"><span class="edit-button">Editer</span></a></button>
+                        <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.code_modele }}" ><span class="delete-button">Supprimer</span></a></button>
                     </td>
                 </tr>
             {% endfor %}
         {% else %}
                 <tr>
                         <td>
-                            Pas de réservoir
+                            Pas de modèle
                         </td>
                 </tr>
         {% endif %}

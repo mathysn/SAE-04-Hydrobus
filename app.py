@@ -29,7 +29,7 @@ def teardown_db(exception):
 def show_accueil():
     return render_template('layout.html')
 
-
+### BUS ###
 @app.route('/bus/show')
 def show_bus():
     bdd = get_db().cursor()
@@ -40,77 +40,6 @@ def show_bus():
     bdd.execute(sql)
     bus = bdd.fetchall()
     return render_template('bus/show_bus.html', bus=bus)
-
-@app.route('/reservoir/show')
-def show_reservoir():
-    bdd = get_db().cursor()
-    sql = """SELECT r.*, m.libelle_modele
-             FROM reservoir r
-             LEFT JOIN modele m ON r.code_modele = m.code_modele
-             ORDER BY r.id_reservoir"""
-    bdd.execute(sql)
-    reservoir = bdd.fetchall()
-    return render_template('reservoir/show_reservoir.html', reservoir=reservoir)
-
-@app.route('/reservoir/delete', methods=['GET'])
-def delete_reservoir():
-    id_reservoir = request.args.get('id', '')
-    bdd = get_db().cursor()
-    sql = "DELETE FROM reservoir WHERE id_reservoir = %s"
-    bdd.execute(sql, id_reservoir)
-    get_db().commit()
-    message = u'Réservoir supprimé, ID: ' + id_reservoir
-    flash(message, 'alert-danger')
-    return redirect('/reservoir/show')
-
-@app.route('/revision/show')
-def show_revision():
-    bdd = get_db().cursor()
-    sql = """SELECT r.*
-           FROM revision r"""
-    bdd.execute(sql)
-    revision = bdd.fetchall()
-    return render_template('revision/show_revision.html', revision=revision)
-
-@app.route('/incident/show')
-def show_incidents():
-    bdd = get_db().cursor()
-    sql = """SELECT i.*, type.infos_type_incident
-           FROM incident i
-           LEFT JOIN type_incident type ON i.id_type_incident = type.id_type_incident
-           GROUP BY i.id_incident"""
-    bdd.execute(sql)
-    incident = bdd.fetchall()
-    return render_template('incident/show_incident.html', incident=incident)
-
-@app.route('/kilometrage/show')
-def show_kilometrage():
-    bdd = get_db().cursor()
-    sql = """SELECT k.*
-           FROM kilometrage k"""
-    bdd.execute(sql)
-    kilometrage = bdd.fetchall()
-    return render_template('kilometrage/show_kilometrage.html', kilometrage=kilometrage)
-
-@app.route('/kilometrage/delete', methods=['GET'])
-def delete_kilometrage():
-    id_kilometrage = request.args.get('id', '')
-    bdd = get_db().cursor()
-    sql = "DELETE FROM kilometrage WHERE id_kilometrage = %s"
-    bdd.execute(sql, id_kilometrage)
-    get_db().commit()
-    message = u'Kilometrage supprimé, ID: ' + id_kilometrage
-    flash(message, 'alert-danger')
-    return redirect('/kilometrage/show')
-
-@app.route('/type_incident/show')
-def show_type_incident():
-    bdd = get_db().cursor()
-    sql = """SELECT t.*
-             FROM type_incident t"""
-    bdd.execute(sql)
-    type_incident = bdd.fetchall()
-    return render_template('type_incident/show_type_incident.html', type_incident=type_incident)
 
 @app.route('/bus/add', methods=['GET'])
 def add_bus():
@@ -149,6 +78,128 @@ def delete_bus():
     message = u'Bus supprimé, ID: ' + id_bus
     flash(message, 'alert-danger')
     return redirect('/bus/show')
+
+
+### RESERVOIR ###
+@app.route('/reservoir/show')
+def show_reservoir():
+    bdd = get_db().cursor()
+    sql = """SELECT r.*, m.libelle_modele
+             FROM reservoir r
+             LEFT JOIN modele m ON r.code_modele = m.code_modele
+             ORDER BY r.id_reservoir"""
+    bdd.execute(sql)
+    reservoir = bdd.fetchall()
+    return render_template('reservoir/show_reservoir.html', reservoir=reservoir)
+
+@app.route('/reservoir/add', methods=['GET'])
+def add_reservoir():
+    bdd = get_db().cursor()
+    sql = """SELECT m.*
+             FROM modele m"""
+    bdd.execute(sql)
+    modele = bdd.fetchall()
+    return render_template('reservoir/add_reservoir.html', modele=modele)
+
+@app.route('/reservoir/add', methods=['POST'])
+def valid_add_reservoir():
+    volume = request.form.get('volume', '')
+    modele = request.form.get('modele', '')
+
+    bdd = get_db().cursor()
+    sql = """INSERT INTO reservoir (
+              volume_reservoir,
+              code_modele)
+              VALUES (%s, %s)"""
+    bdd.execute(sql,(volume, modele))
+    get_db().commit()
+    message = u'Réservoir ajouté, Volume: '+ volume + ' L, Modèle: ' + modele
+    flash(message, 'alert-success')
+    return redirect('/reservoir/show')
+
+@app.route('/reservoir/delete', methods=['GET'])
+def delete_reservoir():
+    id_reservoir = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM reservoir WHERE id_reservoir = %s"
+    bdd.execute(sql, id_reservoir)
+    get_db().commit()
+    message = u'Réservoir supprimé, ID: ' + id_reservoir
+    flash(message, 'alert-danger')
+    return redirect('/reservoir/show')
+
+
+### MODELE ### add/delete à finir
+@app.route('/modele/show')
+def show_modele():
+    bdd = get_db().cursor()
+    sql = """SELECT m.*
+             FROM modele m"""
+    bdd.execute(sql)
+    modele = bdd.fetchall()
+    return render_template('modele/show_modele.html', modele=modele)
+
+@app.route('/modele/add', methods=['GET'])
+def add_modele():
+    bdd = get_db().cursor()
+    sql = """SELECT t.*
+              FROM type_incident t"""
+    bdd.execute(sql)
+    type_incident = bdd.fetchall()
+    return render_template('incident/add_incident.html', type_incident=type_incident)
+
+@app.route('/modele/add', methods=['POST'])
+def valid_add_modele():
+    dateIncident = request.form.get('date-incident', '')
+    idBus = request.form.get('id-bus', '')
+    incidentID = request.form.get('incident-id', '')
+
+    bdd = get_db().cursor()
+    sql = """INSERT INTO incident (
+              date_incident,
+              id_bus, 
+              id_type_incident)
+              VALUES (%s, %s, %s)"""
+    bdd.execute(sql,(dateIncident, idBus, incidentID))
+    get_db().commit()
+    message = u'Incident ajouté, Date: '+ dateIncident + ', Bus: ' + idBus + 'L, Type d\'incident: ' + incidentID
+    flash(message, 'alert-success')
+    return redirect('/modele/show')
+
+@app.route('/modele/delete', methods=['GET'])
+def delete_modele():
+    id_incident = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM incident WHERE id_incident = %s"
+    bdd.execute(sql, id_incident)
+    get_db().commit()
+    message = u'Incident supprimé, ID: ' + id_incident
+    flash(message, 'alert-danger')
+    return redirect('/modele/show')
+
+
+### REVISION ###
+@app.route('/revision/show')
+def show_revision():
+    bdd = get_db().cursor()
+    sql = """SELECT r.*
+           FROM revision r"""
+    bdd.execute(sql)
+    revision = bdd.fetchall()
+    return render_template('revision/show_revision.html', revision=revision)
+
+
+### INCIDENT ###
+@app.route('/incident/show')
+def show_incidents():
+    bdd = get_db().cursor()
+    sql = """SELECT i.*, type.infos_type_incident
+           FROM incident i
+           LEFT JOIN type_incident type ON i.id_type_incident = type.id_type_incident
+           GROUP BY i.id_incident"""
+    bdd.execute(sql)
+    incident = bdd.fetchall()
+    return render_template('incident/show_incident.html', incident=incident)
 
 @app.route('/incident/add', methods=['GET'])
 def add_incident():
@@ -194,6 +245,17 @@ def delete_incident():
     flash(message, 'alert-danger')
     return redirect('/incident/show')
 
+
+### TYPE INCIDENT ###
+@app.route('/type_incident/show')
+def show_type_incident():
+    bdd = get_db().cursor()
+    sql = """SELECT t.*
+             FROM type_incident t"""
+    bdd.execute(sql)
+    type_incident = bdd.fetchall()
+    return render_template('type_incident/show_type_incident.html', type_incident=type_incident)
+
 @app.route('/type_incident/add', methods=['GET'])
 def add_type_incident():
     return render_template('type_incident/add_type_incident.html')
@@ -222,6 +284,30 @@ def delete_type_incident():
     message = u'Type d\'incident supprimé, ID: ' + id_type_incident
     flash(message, 'alert-danger')
     return redirect('/type_incident/show')
+
+
+### KILOMETRAGE ###
+@app.route('/kilometrage/show')
+def show_kilometrage():
+    bdd = get_db().cursor()
+    sql = """SELECT k.*
+           FROM kilometrage k"""
+    bdd.execute(sql)
+    kilometrage = bdd.fetchall()
+    return render_template('kilometrage/show_kilometrage.html', kilometrage=kilometrage)
+
+@app.route('/kilometrage/delete', methods=['GET'])
+def delete_kilometrage():
+    id_kilometrage = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM kilometrage WHERE id_kilometrage = %s"
+    bdd.execute(sql, id_kilometrage)
+    get_db().commit()
+    message = u'Kilometrage supprimé, ID: ' + id_kilometrage
+    flash(message, 'alert-danger')
+    return redirect('/kilometrage/show')
+
+
     
 # @app.route('/tableaux/card')
 # def show_cards():

@@ -11,12 +11,12 @@ CREATE TABLE modele(
     code_modele INT(25) AUTO_INCREMENT,
     libelle_modele VARCHAR(255),
     infos_modele VARCHAR(255),
-    volume_reservoir DECIMAL(5,2),
     PRIMARY KEY (code_modele)
 );
 
 CREATE TABLE reservoir(
     id_reservoir INT(25) AUTO_INCREMENT,
+    volume_reservoir DECIMAL(5,2),
     code_modele INT(25),
     PRIMARY KEY (id_reservoir),
     FOREIGN KEY (code_modele) REFERENCES modele(code_modele)
@@ -73,15 +73,15 @@ CREATE TABLE kilometrage(
     FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
 );
 
-INSERT INTO modele (code_modele, libelle_modele, infos_modele, volume_reservoir)
-VALUES (NULL, 'Reservoir300', "Un réservoir de volume 300L", 300),
-       (NULL, 'Reservoir200', "Un réservoir de volume 300L", 200.00),
-       (NULL, 'Reservoir600', "Un réservoir de volume 300L", 600);
+INSERT INTO modele (code_modele, libelle_modele, infos_modele)
+VALUES (NULL, 'M-23L', "Pour des voitures"),
+       (NULL, 'XL-17L', "Pour des poids-lourd ou avions cargo"),
+       (NULL, 'XS-41M', "Pour des motos");
 
-INSERT INTO reservoir (id_reservoir, code_modele)
-VALUES (NULL, 2),
-       (NULL, 2),
-       (NULL, 1);
+INSERT INTO reservoir (id_reservoir, volume_reservoir, code_modele)
+VALUES (NULL, 200.00, 2),
+       (NULL, 350.00, 2),
+       (NULL, 140.00, 1);
 
 INSERT INTO bus (id_bus, date_achat, conso_annuelle, id_reservoir)
 VALUES (NULL, '2011-12-02', 1677.25, 2),
@@ -100,7 +100,7 @@ VALUES (NULL, '2050-03-14', 2),
 
 INSERT INTO revision (id_revision, descriptif_revision, date_revision, id_reservoir)
 VALUES (NULL, 'RAS', '2020-09-10', 2),
-       (NULL, 'R<ien ne va', '2222-02-22', 1),
+       (NULL, 'Rien ne va', '2222-02-22', 1),
        (NULL, 'RAS', '2222-02-22', 3),
        (NULL, "Moteur à changer", '2222-02-22', 2);
 
