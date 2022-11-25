@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Ajouter un type d'incident</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="head">
+        <h2>Ajout d'un type d'incident</h2>
+        {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <form method="post" action="/type_incident/add">
+    </div>
+
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Type d'incident</legend>
+                <div class="form-group row margin-bot">
+                    <label for="libelle-type" class="col-sm-3 col-form-label margin-left">Libellé</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="libelle-type" class="form-control" type="text" name="libelle-type" size="18" value="" placeholder="Saisir le libellé du type">
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Creer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}

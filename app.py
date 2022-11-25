@@ -52,6 +52,17 @@ def show_reservoir():
     reservoir = bdd.fetchall()
     return render_template('reservoir/show_reservoir.html', reservoir=reservoir)
 
+@app.route('/reservoir/delete', methods=['GET'])
+def delete_reservoir():
+    id_reservoir = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM reservoir WHERE id_reservoir = %s"
+    bdd.execute(sql, id_reservoir)
+    get_db().commit()
+    message = u'Réservoir supprimé, ID: ' + id_reservoir
+    flash(message, 'alert-danger')
+    return redirect('/reservoir/show')
+
 @app.route('/revision/show')
 def show_revision():
     bdd = get_db().cursor()
@@ -80,6 +91,17 @@ def show_kilometrage():
     bdd.execute(sql)
     kilometrage = bdd.fetchall()
     return render_template('kilometrage/show_kilometrage.html', kilometrage=kilometrage)
+
+@app.route('/kilometrage/delete', methods=['GET'])
+def delete_kilometrage():
+    id_kilometrage = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM kilometrage WHERE id_kilometrage = %s"
+    bdd.execute(sql, id_kilometrage)
+    get_db().commit()
+    message = u'Kilometrage supprimé, ID: ' + id_kilometrage
+    flash(message, 'alert-danger')
+    return redirect('/kilometrage/show')
 
 @app.route('/type_incident/show')
 def show_type_incident():
@@ -133,7 +155,7 @@ def add_incident():
     bdd1 = get_db().cursor()
     bdd2 = get_db().cursor()
     sql1 = """SELECT t.*
-             FROM type_incident t"""
+              FROM type_incident t"""
     sql2 = """SELECT b.id_bus
               FROM bus b
               ORDER BY id_bus"""
@@ -141,23 +163,23 @@ def add_incident():
     bdd2.execute(sql2)
     type_incident = bdd1.fetchall()
     bus = bdd2.fetchall()
-    return render_template('incident/add_incident.html', type_incident=type_incident, bus = bus)
+    return render_template('incident/add_incident.html', type_incident=type_incident, bus=bus)
 
 @app.route('/incident/add', methods=['POST'])
 def valid_add_incident():
-    dateAchat = request.form.get('date-achat', '')
-    consommation = request.form.get('conso', '')
-    idReservoir = request.form.get('reservoir_id', '')
+    dateIncident = request.form.get('date-incident', '')
+    idBus = request.form.get('id-bus', '')
+    incidentID = request.form.get('incident-id', '')
 
     bdd = get_db().cursor()
-    sql = """INSERT INTO bus (
-              date_achat,
-              conso_annuelle, 
-              id_reservoir)
+    sql = """INSERT INTO incident (
+              date_incident,
+              id_bus, 
+              id_type_incident)
               VALUES (%s, %s, %s)"""
-    bdd.execute(sql,(dateAchat, consommation, idReservoir))
+    bdd.execute(sql,(dateIncident, idBus, incidentID))
     get_db().commit()
-    message = u'Bus ajouté, DateAchat: '+ dateAchat + ', Consommation: ' + consommation + 'L, IDReservoir: ' + idReservoir
+    message = u'Incident ajouté, Date: '+ dateIncident + ', Bus: ' + idBus + 'L, Type d\'incident: ' + incidentID
     flash(message, 'alert-success')
     return redirect('/incident/show')
 
@@ -165,12 +187,41 @@ def valid_add_incident():
 def delete_incident():
     id_incident = request.args.get('id', '')
     bdd = get_db().cursor()
-    sql = "DELETE FROM bus WHERE id_bus = %s"
+    sql = "DELETE FROM incident WHERE id_incident = %s"
     bdd.execute(sql, id_incident)
     get_db().commit()
     message = u'Incident supprimé, ID: ' + id_incident
     flash(message, 'alert-danger')
     return redirect('/incident/show')
+
+@app.route('/type_incident/add', methods=['GET'])
+def add_type_incident():
+    return render_template('type_incident/add_type_incident.html')
+
+@app.route('/type_incident/add', methods=['POST'])
+def valid_add_type_incident():
+    libelleType = request.form.get('libelle-type', '')
+
+    bdd = get_db().cursor()
+    sql = """INSERT INTO type_incident (
+              infos_type_incident)
+              VALUES (%s)"""
+    bdd.execute(sql,(libelleType))
+    get_db().commit()
+    message = u'Incident ajouté, Libellé: '+ libelleType
+    flash(message, 'alert-success')
+    return redirect('/type_incident/show')
+
+@app.route('/type_incident/delete', methods=['GET'])
+def delete_type_incident():
+    id_type_incident = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM type_incident WHERE id_type_incident = %s"
+    bdd.execute(sql, id_type_incident)
+    get_db().commit()
+    message = u'Type d\'incident supprimé, ID: ' + id_type_incident
+    flash(message, 'alert-danger')
+    return redirect('/type_incident/show')
     
 # @app.route('/tableaux/card')
 # def show_cards():

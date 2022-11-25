@@ -8,7 +8,7 @@
 <br><br>
 <div class="head">
     <h3>Types d'incident</h3>
-    <a type="button" class="btn btn-outline-success" href="/bus/add">
+    <a type="button" class="btn btn-outline-success" href="/type_incident/add">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
         </svg>
@@ -31,8 +31,8 @@
                     <td>{{ ligne.id_type_incident }}</td>
                     <td>{{ ligne.infos_type_incident }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
-                        <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id }}" ><span class="delete-button">Supprimer</span></a></button>
+                        <button class="btn btn-warning btn-sm"><a href="/type_incident/edit?id={{ ligne.id_type_incident }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
+                        <button class="btn btn-danger btn-sm"><a href="/type_incident/delete?id={{ ligne.id_type_incident}}" ><span class="delete-button">Supprimer</span></a></button>
                     </td>
                 </tr>
             {% endfor %}

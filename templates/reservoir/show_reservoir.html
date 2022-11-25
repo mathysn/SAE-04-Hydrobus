@@ -31,8 +31,8 @@
                     <td>{{ ligne.id_reservoir }}</td>
                     <td>{{ ligne.libelle_modele }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id }}&amp;param2={{ligne.libelle}}"><span class="edit-button">editer</span></a></button>
-                        <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id }}" ><span class="delete-button">supprimer</span></a></button>
+                        <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
+                        <button class="btn btn-danger btn-sm"><a href="/reservoir/delete?id={{ ligne.id_reservoir }}" ><span class="delete-button">Supprimer</span></a></button>
                     </td>
                 </tr>
             {% endfor %}
