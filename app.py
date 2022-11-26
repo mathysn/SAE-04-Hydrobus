@@ -33,7 +33,7 @@ def show_accueil():
 @app.route('/bus/show')
 def show_bus():
     bdd = get_db().cursor()
-    sql = "SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir, COUNT(c.id_bus) AS nb_changement\
+    sql = "SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir\
            FROM bus b\
            LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus\
            GROUP BY b.id_bus"
@@ -129,7 +129,7 @@ def delete_reservoir():
     return redirect('/reservoir/show')
 
 
-### MODELE ### add/delete à finir
+### MODELE ###
 @app.route('/modele/show')
 def show_modele():
     bdd = get_db().cursor()
@@ -141,39 +141,32 @@ def show_modele():
 
 @app.route('/modele/add', methods=['GET'])
 def add_modele():
-    bdd = get_db().cursor()
-    sql = """SELECT t.*
-              FROM type_incident t"""
-    bdd.execute(sql)
-    type_incident = bdd.fetchall()
-    return render_template('incident/add_incident.html', type_incident=type_incident)
+    return render_template('modele/add_modele.html')
 
 @app.route('/modele/add', methods=['POST'])
 def valid_add_modele():
-    dateIncident = request.form.get('date-incident', '')
-    idBus = request.form.get('id-bus', '')
-    incidentID = request.form.get('incident-id', '')
+    libelleModele = request.form.get('libelle-modele', '')
+    infosModele = request.form.get('infos-modele', '')
 
     bdd = get_db().cursor()
-    sql = """INSERT INTO incident (
-              date_incident,
-              id_bus, 
-              id_type_incident)
-              VALUES (%s, %s, %s)"""
-    bdd.execute(sql,(dateIncident, idBus, incidentID))
+    sql = """INSERT INTO modele (
+              libelle_modele,
+              infos_modele)
+              VALUES (%s, %s)"""
+    bdd.execute(sql,(libelleModele, infosModele))
     get_db().commit()
-    message = u'Incident ajouté, Date: '+ dateIncident + ', Bus: ' + idBus + 'L, Type d\'incident: ' + incidentID
+    message = u'Modèle ajouté, Libellé: '+ libelleModele + ', Informations: ' + infosModele
     flash(message, 'alert-success')
     return redirect('/modele/show')
 
 @app.route('/modele/delete', methods=['GET'])
 def delete_modele():
-    id_incident = request.args.get('id', '')
+    code_modele = request.args.get('id', '')
     bdd = get_db().cursor()
-    sql = "DELETE FROM incident WHERE id_incident = %s"
-    bdd.execute(sql, id_incident)
+    sql = "DELETE FROM modele WHERE code_modele = %s"
+    bdd.execute(sql, code_modele)
     get_db().commit()
-    message = u'Incident supprimé, ID: ' + id_incident
+    message = u'Modèle supprimé, ID: ' + code_modele
     flash(message, 'alert-danger')
     return redirect('/modele/show')
 

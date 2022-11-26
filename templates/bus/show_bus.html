@@ -23,7 +23,7 @@
                 <th>Date d'achat</th>
                 <th>Conso annuelle</th>
                 <th>ID Réservoir</th>
-                <th>Changements de réservoir</th>
+                <!-- <th>Changements de réservoir</th> -->
                 <th>Opérations</th>
             </tr>
         </thead>
@@ -35,7 +35,7 @@
                     <td>{{ ligne.date_achat }}</td>
                     <td>{{ ligne.conso_annuelle }}</td>
                     <td>{{ ligne.id_reservoir }}</td>
-                    <td>{{ ligne.nb_changement }}</td>
+                    <!-- <td>{{ ligne.nb_changement }}</td> -->
                     <td>
                         <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id_bus }}&amp;param2={{ligne.libelle}}"><span class="edit-button">editer</span></a></button>
                         <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id_bus }}" ><span class="delete-button">supprimer</span></a></button>

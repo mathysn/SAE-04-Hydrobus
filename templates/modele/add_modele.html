@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Ajouter un modèle</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="head">
+        <h2>Ajout d'un modèle</h2>
+        {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <form method="post" action="/modele/add">
+    </div>
+
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Modèle</legend>
+                <div class="form-group row margin-bot">
+                    <label for="libelle-modele" class="col-sm-3 col-form-label margin-left">Libellé</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="libelle-modele" class="form-control" type="text" name="libelle-modele" size="18" value="" placeholder="Saisir le libellé du modèle">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="infos-modele" class="col-sm-3 col-form-label margin-left">Informations</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="infos-modele" class="form-control" type="text" name="infos-modele" size="18" value="" placeholder="Saisir des infos sur le modèle">
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Creer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}

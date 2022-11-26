@@ -28,7 +28,7 @@ CREATE TABLE bus(
     conso_annuelle DECIMAL(7,2),
     id_reservoir INT(25),
     PRIMARY KEY (id_bus),
-    CONSTRAINT bus_fk FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir)
+    FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir)
 );
 
 CREATE TABLE changement_reservoir(
@@ -36,7 +36,7 @@ CREATE TABLE changement_reservoir(
     date_changement DATE NOT NULL,
     id_bus INT(25) NOT NULL,
     PRIMARY KEY (id_changement),
-    CONSTRAINT FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
+    FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
 );
 
 CREATE TABLE revision(

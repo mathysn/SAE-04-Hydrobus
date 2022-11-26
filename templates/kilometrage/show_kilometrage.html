@@ -24,7 +24,7 @@
             <tr>
                 <th>ID</th>
                 <th>Date</th>
-                <th>Nombre KM</th>
+                <th>Distance</th>
                 <th>ID Bus</th>
                 <th>Opérations</th>
             </tr>
@@ -35,7 +35,7 @@
                 <tr>
                     <td>{{ ligne.id_kilometrage }}</td>
                     <td>{{ ligne.date_periode }}</td>
-                    <td>{{ ligne.nombre_km }}</td>
+                    <td>{{ ligne.nombre_km }} km</td>
                     <td>{{ ligne.id_bus }}</td>
                     <td>
                         <button class="btn btn-danger btn-sm"><a href="/kilometrage/delete?id={{ ligne.id_kilometrage }}" ><span class="delete-button">supprimer</span></a></button>
