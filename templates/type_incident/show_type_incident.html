@@ -31,8 +31,10 @@
                     <td>{{ ligne.id_type_incident }}</td>
                     <td>{{ ligne.infos_type_incident }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm"><a href="/type_incident/edit?id={{ ligne.id_type_incident }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
-                        <button class="btn btn-danger btn-sm"><a href="/type_incident/delete?id={{ ligne.id_type_incident}}" ><span class="delete-button">Supprimer</span></a></button>
+                        <div class="btn-group">
+                            <button class="btn btn-warning btn-sm"><a href="/type_incident/edit?id={{ ligne.id_type_incident }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
+                            <button class="btn btn-danger btn-sm"><a href="/type_incident/delete?id={{ ligne.id_type_incident}}" ><span class="delete-button">Supprimer</span></a></button>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

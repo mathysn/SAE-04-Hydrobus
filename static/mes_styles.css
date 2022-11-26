@@ -83,3 +83,7 @@ legend {
 .cards {
     margin: auto;
 }
+
+nav {
+    border-bottom: solid 1px black;
+}

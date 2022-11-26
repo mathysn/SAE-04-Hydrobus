@@ -33,10 +33,10 @@ def show_accueil():
 @app.route('/bus/show')
 def show_bus():
     bdd = get_db().cursor()
-    sql = "SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir\
-           FROM bus b\
-           LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus\
-           GROUP BY b.id_bus"
+    sql = """SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir, COUNT(c.id_bus) AS nb_changement
+           FROM bus b
+           LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus
+           GROUP BY b.id_bus"""
     bdd.execute(sql)
     bus = bdd.fetchall()
     return render_template('bus/show_bus.html', bus=bus)
@@ -45,7 +45,8 @@ def show_bus():
 def add_bus():
     bdd = get_db().cursor()
     sql = """SELECT r.id_reservoir
-             FROM reservoir r"""
+             FROM reservoir r
+             ORDER BY r.id_reservoir"""
     bdd.execute(sql)
     reservoir = bdd.fetchall()
     return render_template('bus/add_bus.html', reservoir=reservoir)
@@ -64,7 +65,7 @@ def valid_add_bus():
               VALUES (%s, %s, %s)"""
     bdd.execute(sql,(dateAchat, consommation, idReservoir))
     get_db().commit()
-    message = u'Bus ajouté, DateAchat: '+ dateAchat + ', Consommation: ' + consommation + 'L, IDReservoir: ' + idReservoir
+    message = u'Bus ajouté, Date d\'achat: '+ dateAchat + ', Consommation: ' + consommation + ' L, Reservoir: ' + idReservoir
     flash(message, 'alert-success')
     return redirect('/bus/show')
 
@@ -72,8 +73,11 @@ def valid_add_bus():
 def delete_bus():
     id_bus = request.args.get('id', '')
     bdd = get_db().cursor()
+    # bdd2 = get_db().cursor()
     sql = "DELETE FROM bus WHERE id_bus = %s"
+    # sql2 = "ALTER TABLE bus AUTO_INCREMENT = 1"
     bdd.execute(sql, id_bus)
+    # bdd2.execute(sql2)
     get_db().commit()
     message = u'Bus supprimé, ID: ' + id_bus
     flash(message, 'alert-danger')

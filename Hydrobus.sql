@@ -19,7 +19,7 @@ CREATE TABLE reservoir(
     volume_reservoir DECIMAL(5,2),
     code_modele INT(25),
     PRIMARY KEY (id_reservoir),
-    FOREIGN KEY (code_modele) REFERENCES modele(code_modele)
+    FOREIGN KEY (code_modele) REFERENCES modele(code_modele) ON DELETE CASCADE
 );
 
 CREATE TABLE bus(
@@ -28,7 +28,7 @@ CREATE TABLE bus(
     conso_annuelle DECIMAL(7,2),
     id_reservoir INT(25),
     PRIMARY KEY (id_bus),
-    FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir)
+    FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir) ON DELETE CASCADE
 );
 
 CREATE TABLE changement_reservoir(
@@ -36,7 +36,7 @@ CREATE TABLE changement_reservoir(
     date_changement DATE NOT NULL,
     id_bus INT(25) NOT NULL,
     PRIMARY KEY (id_changement),
-    FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
+    FOREIGN KEY (id_bus) REFERENCES bus(id_bus) ON DELETE CASCADE
 );
 
 CREATE TABLE revision(
@@ -45,13 +45,13 @@ CREATE TABLE revision(
     date_revision DATE NOT NULL,
     id_reservoir INT(25),
     PRIMARY KEY (id_revision),
-    FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir)
+    FOREIGN KEY (id_reservoir) REFERENCES reservoir(id_reservoir) ON DELETE CASCADE
 );
 
 CREATE TABLE type_incident(
     id_type_incident INT(25) AUTO_INCREMENT,
     infos_type_incident VARCHAR(255),
-    PRIMARY KEY (id_type_incident)
+    PRIMARY KEY (id_type_incident) 
 );
 
 CREATE TABLE incident(
@@ -60,8 +60,8 @@ CREATE TABLE incident(
     id_bus INT(25),
     id_type_incident INT(25),
     PRIMARY KEY (id_incident),
-    FOREIGN KEY (id_bus) REFERENCES bus(id_bus),
-    FOREIGN KEY (id_type_incident) REFERENCES type_incident(id_type_incident)
+    FOREIGN KEY (id_bus) REFERENCES bus(id_bus) ON DELETE CASCADE,
+    FOREIGN KEY (id_type_incident) REFERENCES type_incident(id_type_incident) ON DELETE CASCADE
 );
 
 CREATE TABLE kilometrage(
@@ -70,13 +70,13 @@ CREATE TABLE kilometrage(
     nombre_km DECIMAL(7,2),
     id_bus INT(25),
     PRIMARY KEY (id_kilometrage),
-    FOREIGN KEY (id_bus) REFERENCES bus(id_bus)
+    FOREIGN KEY (id_bus) REFERENCES bus(id_bus) ON DELETE CASCADE
 );
 
 INSERT INTO modele (code_modele, libelle_modele, infos_modele)
-VALUES (NULL, 'M-23L', "Pour des voitures"),
-       (NULL, 'XL-17L', "Pour des poids-lourd ou avions cargo"),
-       (NULL, 'XS-41M', "Pour des motos");
+VALUES (NULL, 'M-23L', "Pour un bus double"),
+       (NULL, 'XL-17L', "Pour un bus triple"),
+       (NULL, 'XS-41M', "Pour un bus simple");
 
 INSERT INTO reservoir (id_reservoir, volume_reservoir, code_modele)
 VALUES (NULL, 200.00, 2),
