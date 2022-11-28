@@ -69,6 +69,40 @@ def valid_add_bus():
     flash(message, 'alert-success')
     return redirect('/bus/show')
 
+@app.route('/bus/edit', methods=['GET'])
+def edit_type_article():
+    bdd = get_db().cursor()
+    sql = """SELECT b.*
+             FROM bus b
+             WHERE id_bus = %s"""
+    bdd.execute(sql)
+    bus = bdd.fetchone()
+    bdd2 = get_db().cursor
+    sql2 = """SELECT r.*
+              FROM reservoir r"""
+    bdd2.execute(sql2)
+    reservoir = bdd2.fetchall()
+    return render_template('bus/edit_bus.html', bus=bus, reservoir=reservoir)
+
+@app.route('/bus/edit', methods=['POST'])
+def valid_edit_type_article():
+    bdd = get_db().cursor()
+
+    id = request.form.get('id', '')
+    date_achat = request.form.get('date-achat', '')
+    conso = request.form.get('conso', '')
+    id_reservoir = request.form.get('id-reservoir', '')
+
+    sql = """UPDATE bus
+             SET date_achat = date_achat,
+             conso_anuelle = conso
+             id_reservoir = id_reservoir"""
+
+    bdd.execute(sql)
+    message = u'Bus modifié, ID: ' + id + ", Date d'achat: " + date_achat + ', conso anuelle ' + conso + ' ID reservoir: ' + id_reservoir
+    flash(message, 'alert-warning')
+    return redirect('/bus/show')
+
 @app.route('/bus/delete', methods=['GET'])
 def delete_bus():
     id_bus = request.args.get('id', '')
