@@ -63,21 +63,22 @@ def valid_add_bus():
               conso_annuelle, 
               id_reservoir)
               VALUES (%s, %s, %s)"""
-    bdd.execute(sql,(dateAchat, consommation, idReservoir))
+    bdd.execute(sql, (dateAchat, consommation, idReservoir))
     get_db().commit()
     message = u'Bus ajouté, Date d\'achat: '+ dateAchat + ', Consommation: ' + consommation + ' L, Reservoir: ' + idReservoir
     flash(message, 'alert-success')
     return redirect('/bus/show')
 
 @app.route('/bus/edit', methods=['GET'])
-def edit_type_article():
+def edit_bus():
+    id_bus = request.args.get('id', '')
     bdd = get_db().cursor()
     sql = """SELECT b.*
              FROM bus b
              WHERE id_bus = %s"""
-    bdd.execute(sql)
+    bdd.execute(sql, [id_bus])
     bus = bdd.fetchone()
-    bdd2 = get_db().cursor
+    bdd2 = get_db().cursor()
     sql2 = """SELECT r.*
               FROM reservoir r"""
     bdd2.execute(sql2)
@@ -85,21 +86,20 @@ def edit_type_article():
     return render_template('bus/edit_bus.html', bus=bus, reservoir=reservoir)
 
 @app.route('/bus/edit', methods=['POST'])
-def valid_edit_type_article():
+def valid_edit_bus():
     bdd = get_db().cursor()
-
-    id = request.form.get('id', '')
+    id_bus = request.form.get('id', '')
     date_achat = request.form.get('date-achat', '')
     conso = request.form.get('conso', '')
     id_reservoir = request.form.get('id-reservoir', '')
-
-    sql = """UPDATE bus
-             SET date_achat = date_achat,
-             conso_anuelle = conso
-             id_reservoir = id_reservoir"""
-
-    bdd.execute(sql)
-    message = u'Bus modifié, ID: ' + id + ", Date d'achat: " + date_achat + ', conso anuelle ' + conso + ' ID reservoir: ' + id_reservoir
+    sql = """UPDATE bus 
+             SET date_achat = %s,
+             conso_annuelle = %s,
+             id_reservoir = %s
+             WHERE id_bus = %s"""
+    bdd.execute(sql, [date_achat, conso, id_reservoir, id_bus])
+    get_db().commit()
+    message = u'Bus modifié, ID: ' + id_bus + ", Date d'achat: " + date_achat + ', Conso annuelle: ' + conso + ', ID Réservoir: ' + id_reservoir
     flash(message, 'alert-warning')
     return redirect('/bus/show')
 
@@ -219,6 +219,89 @@ def show_revision():
     revision = bdd.fetchall()
     return render_template('revision/show_revision.html', revision=revision)
 
+@app.route('/revision/add', methods=['GET'])
+def add_revision():
+    bdd = get_db().cursor()
+    sql = """SELECT reservoir.*
+              FROM reservoir"""
+    bdd.execute(sql)
+    reservoir = bdd.fetchall()
+    return render_template('revision/add_revision.html', reservoir=reservoir)
+
+@app.route('/revision/add', methods=['POST'])
+def valid_add_revision():
+    descriptif = request.form.get('descriptif', '')
+    dateRevision = request.form.get('date-revision', '')
+    idReservoir = request.form.get('id-reservoir', '')
+
+    bdd = get_db().cursor()
+    sql = """INSERT INTO revision (
+              descriptif_revision,
+              date_revision, 
+              id_reservoir)
+              VALUES (%s, %s, %s)"""
+    bdd.execute(sql, (descriptif, dateRevision, idReservoir))
+    get_db().commit()
+    message = u'Révision ajoutée, Descriptif: ' + descriptif + 'Date: '+ dateRevision + ', Réservoir: ' + idReservoir
+    flash(message, 'alert-success')
+    return redirect('/revision/show')
+
+@app.route('/revision/edit', methods=['GET'])
+def edit_revision():
+    id_incident = request.args.get('id', '')
+    bdd1 = get_db().cursor()
+    bdd2 = get_db().cursor()
+    bdd3 = get_db().cursor()
+
+    sql1 = """SELECT t.*
+              FROM type_incident t"""
+
+    sql2 = """SELECT i.*, t.*
+             FROM incident i
+             LEFT JOIN type_incident t ON i.id_type_incident = type_incident.id_type_incident
+             WHERE id_incident = %s"""
+
+    sql3 = """SELECT bus.*
+              FROM bus"""
+
+    bdd1.execute(sql1)
+    bdd2.execute(sql2, [id_incident])
+    bdd3.execute(sql3)
+
+    type_incident = bdd1.fetchall()
+    incident = bdd2.fetchone()
+    bus = bdd3.fetchall()
+    return render_template('revision/edit_revision.html', type_incident=type_incident, incident=incident, bus=bus)
+
+@app.route('/revision/edit', methods=['POST'])
+def valid_edit_revision():
+    bdd = get_db().cursor()
+    id_incident = request.form.get('id', '')
+    dateIncident = request.form.get('date-incident', '')
+    idBus = request.form.get('id-bus', '')
+    idTypeIncident = request.form.get('id-type-incident', '')
+    sql = """UPDATE incident 
+             SET date_incident = %s,
+             id_bus = %s,
+             id_type_incident = %s
+             WHERE id_incident = %s"""
+    bdd.execute(sql, [dateIncident, idBus, idTypeIncident, id_incident])
+    get_db().commit()
+    message = u'Incident modifié, ID: ' + id_incident + ", Date de l'incident: " + dateIncident + ', Bus: ' + idBus + ', Type d\'incident: ' + idTypeIncident
+    flash(message, 'alert-warning')
+    return redirect('/revision/show')
+
+@app.route('/revision/delete', methods=['GET'])
+def delete_revision():
+    id_incident = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = "DELETE FROM incident WHERE id_incident = %s"
+    bdd.execute(sql, id_incident)
+    get_db().commit()
+    message = u'Incident supprimé, ID: ' + id_incident
+    flash(message, 'alert-danger')
+    return redirect('/revision/show')
+
 
 ### INCIDENT ###
 @app.route('/incident/show')
@@ -263,6 +346,51 @@ def valid_add_incident():
     get_db().commit()
     message = u'Incident ajouté, Date: '+ dateIncident + ', Bus: ' + idBus + 'L, Type d\'incident: ' + incidentID
     flash(message, 'alert-success')
+    return redirect('/incident/show')
+
+@app.route('/incident/edit', methods=['GET'])
+def edit_incident():
+    id_incident = request.args.get('id', '')
+    bdd1 = get_db().cursor()
+    bdd2 = get_db().cursor()
+    bdd3 = get_db().cursor()
+
+    sql1 = """SELECT t.*
+              FROM type_incident t"""
+
+    sql2 = """SELECT i.*, type_incident.*
+             FROM incident i
+             LEFT JOIN type_incident ON i.id_type_incident = type_incident.id_type_incident
+             WHERE id_incident = %s"""
+
+    sql3 = """SELECT bus.*
+              FROM bus"""
+
+    bdd1.execute(sql1)
+    bdd2.execute(sql2, [id_incident])
+    bdd3.execute(sql3)
+
+    type_incident = bdd1.fetchall()
+    incident = bdd2.fetchone()
+    bus = bdd3.fetchall()
+    return render_template('incident/edit_incident.html', type_incident=type_incident, incident=incident, bus=bus)
+
+@app.route('/incident/edit', methods=['POST'])
+def valid_edit_incident():
+    bdd = get_db().cursor()
+    id_incident = request.form.get('id', '')
+    dateIncident = request.form.get('date-incident', '')
+    idBus = request.form.get('id-bus', '')
+    idTypeIncident = request.form.get('id-type-incident', '')
+    sql = """UPDATE incident 
+             SET date_incident = %s,
+             id_bus = %s,
+             id_type_incident = %s
+             WHERE id_incident = %s"""
+    bdd.execute(sql, [dateIncident, idBus, idTypeIncident, id_incident])
+    get_db().commit()
+    message = u'Incident modifié, ID: ' + id_incident + ", Date de l'incident: " + dateIncident + ', Bus: ' + idBus + ', Type d\'incident: ' + idTypeIncident
+    flash(message, 'alert-warning')
     return redirect('/incident/show')
 
 @app.route('/incident/delete', methods=['GET'])
@@ -326,6 +454,34 @@ def show_kilometrage():
     bdd.execute(sql)
     kilometrage = bdd.fetchall()
     return render_template('kilometrage/show_kilometrage.html', kilometrage=kilometrage)
+
+@app.route('/kilometrage/add', methods=['GET'])
+def add_kilometrage():
+    bdd = get_db().cursor()
+    sql = """SELECT bus.*
+             FROM bus
+             ORDER BY id_bus"""
+    bdd.execute(sql)
+    bus = bdd.fetchall()
+    return render_template('kilometrage/add_kilometrage.html', bus=bus)
+
+@app.route('/kilometrage/add', methods=['POST'])
+def valid_add_kilometrage():
+    dateKilo = request.form.get('date-kilo', '')
+    distance = request.form.get('distance', '')
+    idBus = request.form.get('id-bus', '')
+
+    bdd = get_db().cursor()
+    sql = """INSERT INTO kilometrage (
+              date_periode,
+              nombre_km, 
+              id_bus)
+              VALUES (%s, %s, %s)"""
+    bdd.execute(sql, (dateKilo, distance, idBus))
+    get_db().commit()
+    message = u'Kilométrage ajouté, Date de la période: '+ dateKilo + ', Nombre de km: ' + distance + ' L, Bus: ' + idBus
+    flash(message, 'alert-success')
+    return redirect('/kilometrage/show')
 
 @app.route('/kilometrage/delete', methods=['GET'])
 def delete_kilometrage():

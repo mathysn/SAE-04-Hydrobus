@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% block title %}
-            <title>layout</title>
+            <title>Accueil</title>
         {% endblock %}
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" >
         {% block stylesheets %}
@@ -26,10 +26,10 @@
         {% endwith %}
 
         {% block body %}
-            <p style="margin: 50px; font-size: 16px; color: rgb(86, 89, 255);">
-                Guide d'utilisation:<br>
+            <h1 style="margin: 50px; color: rgb(86, 89, 255);">
+                Accueil<br>
                 
-            </p>
+            </h1>
         {% endblock %}
         {% block javascripts %}
             <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>

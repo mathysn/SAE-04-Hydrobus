@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Modifier un incident</title>
+{% endblock %}
+
+{% block body %}
+  <h2 class="text-align-center">Modifier un incident</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  {{ incident }}
+  <form method="post" action="/incident/edit">
+    <fieldset>
+        <div class="container formulaire w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Incident</legend>
+                <input type="hidden" name="id" value="{{ incident.id_incident }}">
+                <div class="form-group row margin-bot">
+                    <label for="date-incident" class="col-sm-3 col-form-label margin-left">Date d'incident</label>
+                    <div class="col-sm-6">
+                        <input id="date-incident" class="form-control" type="date" name="date-incident" size="18" value="{{ incident.date_incident }}">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="id-bus" class="col-sm-3 col-form-label margin-left">Id Bus</label>
+                    <div class="col-sm-6">
+                        <select id="id-bus" class="form-control" name="id-bus" required>
+                            <option value="{{ incident.id_bus }}">{{ incident.id_bus }}</option>
+                            {% for b in bus %}
+                                <option value="{{ b.id_bus }}"> {{ b.id_bus }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="id-type-incident" class="col-sm-3 col-form-label margin-left">ID Type Incident</label>
+                    <div class="col-sm-6">
+                        <select id="id-type-incident" class="form-control" name="id-type-incident" required>
+                            <option value="{{ incident.id_type_incident }}">{{ incident.infos_type_incident }}</option>
+                            {% for t in type_incident %}
+                                <option value="{{ t.id_type_incident }}"> {{ t.infos_type_incident }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Editer" name="Editer">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+  </form>
+{% endblock %}

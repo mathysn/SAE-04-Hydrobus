@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Ajouter un kilométrage</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="head">
+        <h2>Ajout d'un kilométrage</h2>
+        {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <form method="post" action="/kilometrage/add">
+    </div>
+
+    <fieldset>
+        <div class="container w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Kilométrage</legend>
+                <div class="form-group row margin-bot">
+                    <label for="date-kilo" class="col-sm-3 col-form-label margin-left">Date</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="date-kilo" class="form-control" type="date" name="date-kilo" size="18" value="" placeholder="Saisir la date">
+                    </div>
+                </div>
+                
+                <div class="form-group row margin-bot">
+                    <label for="distance" class="col-sm-3 col-form-label margin-left">Distance (km)</label>
+                    <div class="col-sm-6">
+                        <input required="required" id="distance" class="form-control" type="text" name="distance" size="18" value="" placeholder="Saisir la distance">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="id-bus" class="col-sm-3 col-form-label margin-left">ID Bus</label>
+                    <div class="col-sm-6">
+                        <select id="id-bus" class="form-control" name="id-bus" required>
+                            <option value="">Sélectionner le bus</option>
+                            {% for b in bus %}
+                                <option value="{{ b.id_bus }}"> {{ b.id_bus }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Creer" name="Valider">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
