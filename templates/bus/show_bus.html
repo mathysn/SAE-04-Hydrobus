@@ -23,7 +23,6 @@
                 <th>Date d'achat</th>
                 <th>Conso annuelle</th>
                 <th>ID Réservoir</th>
-                <th>Changements de réservoir</th>
                 <th>Opérations</th>
             </tr>
         </thead>
@@ -33,22 +32,22 @@
                 <tr>
                     <td>{{ ligne.id_bus }}</td>
                     <td>{{ ligne.date_achat }}</td>
-                    <td>{{ ligne.conso_annuelle }}</td>
+                    <td>{{ ligne.conso_annuelle }} L</td>
                     <td>{{ ligne.id_reservoir }}</td>
-                    <td>{{ ligne.nb_changement }}</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-warning btn-sm btn-"><a href="/bus/edit?id={{ ligne.id_bus }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
-                            <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id_bus }}" ><span class="delete-button">Supprimer</span></a></button>
+                            <button class="btn btn-warning btn-sm"><a href="/bus/edit?id={{ ligne.id_bus }}&amp;param2={{ligne.libelle}}"><span class="edit-button">Editer</span></a></button>
+                            <button class="btn btn-danger btn-sm"><a href="/bus/delete?id={{ ligne.id_bus }}"><span class="delete-button">Supprimer</span></a></button>
+                            <button class="btn btn-info btn-sm"><a href="/bus/etat?id={{ ligne.id_bus }}"><span class="etat-button">Etat</span></a></button>
                         </div>
                     </td>
                 </tr>
             {% endfor %}
         {% else %}
                 <tr>
-                        <td>
-                            pas de bus
-                        </td>
+                    <td>
+                        Pas de bus
+                    </td>
                 </tr>
         {% endif %}
         </tbody>

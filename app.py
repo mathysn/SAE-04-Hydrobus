@@ -33,9 +33,8 @@ def show_accueil():
 @app.route('/bus/show')
 def show_bus():
     bdd = get_db().cursor()
-    sql = """SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir, COUNT(c.id_bus) AS nb_changement
+    sql = """SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir
            FROM bus b
-           LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus
            GROUP BY b.id_bus"""
     bdd.execute(sql)
     bus = bdd.fetchall()
@@ -344,7 +343,7 @@ def valid_add_incident():
               VALUES (%s, %s, %s)"""
     bdd.execute(sql,(dateIncident, idBus, incidentID))
     get_db().commit()
-    message = u'Incident ajouté, Date: '+ dateIncident + ', Bus: ' + idBus + 'L, Type d\'incident: ' + incidentID
+    message = u'Incident ajouté, Date: '+ dateIncident + ', Bus: ' + idBus + ', Type d\'incident: ' + incidentID
     flash(message, 'alert-success')
     return redirect('/incident/show')
 
@@ -479,7 +478,7 @@ def valid_add_kilometrage():
               VALUES (%s, %s, %s)"""
     bdd.execute(sql, (dateKilo, distance, idBus))
     get_db().commit()
-    message = u'Kilométrage ajouté, Date de la période: '+ dateKilo + ', Nombre de km: ' + distance + ' L, Bus: ' + idBus
+    message = u'Kilométrage ajouté, Date de la période: '+ dateKilo + ', Nombre de km: ' + distance + ' km, Bus: ' + idBus
     flash(message, 'alert-success')
     return redirect('/kilometrage/show')
 
@@ -493,7 +492,6 @@ def delete_kilometrage():
     message = u'Kilometrage supprimé, ID: ' + id_kilometrage
     flash(message, 'alert-danger')
     return redirect('/kilometrage/show')
-
 
     
 # @app.route('/tableaux/card')
