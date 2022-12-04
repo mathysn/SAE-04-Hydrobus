@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Etat d'un reservoir</title>
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-align-center">Page d'état</h2>
+    {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+    
+    <form method="post" action="/reservoir/etat_retour">
+        <fieldset>
+            <div class="container formulaire w-75 margin-top-40">
+                <div class="border rounded w-50">
+                    <input type="hidden" name="id" value="{{ reservoir.id_reservoir }}">
+                    <p class="text-align-center m-auto pt-2">
+                        Le réservoir {{reservoir.id_reservoir}} a eu {{reservoir.nb_revision}} révisions.
+                    </p>
+                    <br>
+                    <div class="col text-center margin-bot">
+                        <input class="btn btn-primary" type="submit" value="Retour" name="Retour">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

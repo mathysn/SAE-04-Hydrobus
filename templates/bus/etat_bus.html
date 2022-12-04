@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Etat d'un bus</title>
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-align-center">Page d'état</h2>
+    {% if error %}
+        <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+    
+    <form method="post" action="/bus/etat_retour">
+
+        <input type="hidden" name="id" value="{{bus.id_bus}}">
+        <fieldset>
+            <div class="container formulaire w-75 margin-top-40">
+                <div class="border rounded w-50">
+                    <input type="hidden" name="id" value="{{ bus.id_bus }}">
+                    <p class="text-align-center m-auto pt-2">
+                        <strong>Changements de réservoir: </strong>Le bus {{bus.id_bus}} a changé de réservoir {{bus.nb_changement}} fois.
+                    </p>
+                    <br>
+                    <p class="text-align-center m-auto pt-2">
+                        <strong>Kilométrage total: </strong>Le bus {{bus2.id_bus}} a roulé {{bus2.nb_km_total}}km au total.
+                    </p>
+                    <br>
+                    <p class="text-align-center m-auto pt-2">
+                        <strong>Kilométrage max: </strong>Le bus {{bus3.id_bus}} a roulé {{bus3.nb_km_max}}km au maximum.
+                    </p>
+                    <br>
+                    <div class="col text-center margin-bot">
+                        <input class="btn btn-primary" type="submit" value="Retour" name="Retour">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+{% endblock %}

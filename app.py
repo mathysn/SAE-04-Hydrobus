@@ -33,12 +33,47 @@ def show_accueil():
 @app.route('/bus/show')
 def show_bus():
     bdd = get_db().cursor()
-    sql = """SELECT b.id_bus, b.date_achat, b.conso_annuelle, b.id_reservoir
-           FROM bus b
-           GROUP BY b.id_bus"""
+    sql = """SELECT b.*, COUNT(c.id_bus) AS nb_changement
+             FROM bus b
+             LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus
+             GROUP BY b.id_bus"""
     bdd.execute(sql)
     bus = bdd.fetchall()
     return render_template('bus/show_bus.html', bus=bus)
+
+@app.route('/bus/etat', methods=['GET'])
+def etat_bus():
+    id_bus = request.args.get('id', '')
+    bdd = get_db().cursor()
+    bdd2 = get_db().cursor()
+    bdd3 = get_db().cursor()
+
+    sql = """SELECT b.*, COUNT(c.id_bus) AS nb_changement
+             FROM bus b
+             LEFT JOIN changement_reservoir c ON b.id_bus = c.id_bus
+             WHERE b.id_bus = %s"""
+
+    sql2 = """SELECT b.*, SUM(k.nombre_km) AS nb_km_total
+              FROM bus b
+              LEFT JOIN kilometrage k ON b.id_bus = k.id_bus
+              where b.id_bus = %s"""
+
+    sql3 = """SELECT b.*, MAX(k.nombre_km) AS nb_km_max
+              FROM bus b
+              LEFT JOIN kilometrage k ON b.id_bus = k.id_bus
+              WHERE b.id_bus = %s"""
+
+    bdd.execute(sql, [id_bus])
+    bdd2.execute(sql2, [id_bus])
+    bdd3.execute(sql3, [id_bus])
+    bus = bdd.fetchone()
+    bus2 = bdd2.fetchone()
+    bus3 = bdd3.fetchone()
+    return render_template('bus/etat_bus.html', bus=bus, bus2=bus2, bus3=bus3)
+
+@app.route('/bus/etat_retour', methods=['POST'])
+def retour_etat_bus():
+    return redirect('/bus/show')
 
 @app.route('/bus/add', methods=['GET'])
 def add_bus():
@@ -106,11 +141,8 @@ def valid_edit_bus():
 def delete_bus():
     id_bus = request.args.get('id', '')
     bdd = get_db().cursor()
-    # bdd2 = get_db().cursor()
     sql = "DELETE FROM bus WHERE id_bus = %s"
-    # sql2 = "ALTER TABLE bus AUTO_INCREMENT = 1"
     bdd.execute(sql, id_bus)
-    # bdd2.execute(sql2)
     get_db().commit()
     message = u'Bus supprimé, ID: ' + id_bus
     flash(message, 'alert-danger')
@@ -128,6 +160,22 @@ def show_reservoir():
     bdd.execute(sql)
     reservoir = bdd.fetchall()
     return render_template('reservoir/show_reservoir.html', reservoir=reservoir)
+
+@app.route('/reservoir/etat', methods=['GET'])
+def etat_reservoir():
+    id_reservoir = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = """SELECT res.*, COUNT(revision.id_revision) AS nb_revision
+             FROM reservoir res
+             LEFT JOIN revision ON res.id_reservoir = revision.id_reservoir
+             WHERE res.id_reservoir = %s"""
+    bdd.execute(sql, [id_reservoir])
+    reservoir = bdd.fetchone()
+    return render_template('reservoir/etat_reservoir.html', reservoir=reservoir)
+
+@app.route('/reservoir/etat_retour', methods=['POST'])
+def retour_etat_reservoir():
+    return redirect('/reservoir/show')
 
 @app.route('/reservoir/add', methods=['GET'])
 def add_reservoir():
@@ -152,6 +200,41 @@ def valid_add_reservoir():
     get_db().commit()
     message = u'Réservoir ajouté, Volume: '+ volume + ' L, Modèle: ' + modele
     flash(message, 'alert-success')
+    return redirect('/reservoir/show')
+
+@app.route('/reservoir/edit', methods=['GET'])
+def edit_reservoir():
+    id_reservoir = request.args.get('id', '')
+    bdd1 = get_db().cursor()
+    sql1 = """SELECT modele.*
+              FROM modele"""
+    bdd1.execute(sql1)
+    modele = bdd1.fetchall()
+
+    bdd2 = get_db().cursor()
+    sql2 = """SELECT r.*, modele.*
+              FROM reservoir r
+              LEFT JOIN modele ON r.code_modele = modele.code_modele
+              WHERE id_reservoir = %s"""
+    bdd2.execute(sql2, [id_reservoir])
+    reservoir = bdd2.fetchone()
+    return render_template('reservoir/edit_reservoir.html', modele=modele, reservoir=reservoir)
+
+@app.route('/reservoir/edit', methods=['POST'])
+def valid_edit_reservoir():
+    bdd = get_db().cursor()
+    id_reservoir = request.form.get('id', '')
+    volumeReservoir = request.form.get('volume', '')
+    codeModele = request.form.get('code-modele', '')
+    idTypeIncident = request.form.get('id-type-incident', '')
+    sql = """UPDATE reservoir 
+             SET volume_reservoir = %s,
+             code_modele = %s
+             WHERE id_reservoir = %s"""
+    bdd.execute(sql, [volumeReservoir, codeModele, id_reservoir])
+    get_db().commit()
+    message = u'Réservoir modifié, ID: ' + id_reservoir + ", Volume: " + volumeReservoir + ' L, Modèle: ' + codeModele
+    flash(message, 'alert-warning')
     return redirect('/reservoir/show')
 
 @app.route('/reservoir/delete', methods=['GET'])
@@ -194,6 +277,33 @@ def valid_add_modele():
     get_db().commit()
     message = u'Modèle ajouté, Libellé: '+ libelleModele + ', Informations: ' + infosModele
     flash(message, 'alert-success')
+    return redirect('/modele/show')
+
+@app.route('/modele/edit', methods=['GET'])
+def edit_modele():
+    code_modele = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = """SELECT modele.*
+             FROM modele
+             WHERE code_modele = %s"""
+    bdd.execute(sql, [code_modele])
+    modele = bdd.fetchone()
+    return render_template('modele/edit_modele.html', modele=modele)
+
+@app.route('/modele/edit', methods=['POST'])
+def valid_edit_modele():
+    bdd = get_db().cursor()
+    code_modele = request.form.get('id', '')
+    libelleModele = request.form.get('libelle-modele', '')
+    infosModele = request.form.get('infos-modele', '')
+    sql = """UPDATE modele 
+             SET libelle_modele = %s,
+             infos_modele = %s
+             WHERE code_modele = %s"""
+    bdd.execute(sql, [libelleModele, infosModele, code_modele])
+    get_db().commit()
+    message = u'Type d\'incident modifié, ID: ' + code_modele + ", Libellé: " + libelleModele + ", Informations: " + infosModele
+    flash(message, 'alert-warning')
     return redirect('/modele/show')
 
 @app.route('/modele/delete', methods=['GET'])
@@ -247,57 +357,46 @@ def valid_add_revision():
 
 @app.route('/revision/edit', methods=['GET'])
 def edit_revision():
-    id_incident = request.args.get('id', '')
-    bdd1 = get_db().cursor()
+    id_revision = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = """SELECT revision.*
+             FROM revision
+             WHERE id_revision = %s"""
+    bdd.execute(sql, [id_revision])
+    revision = bdd.fetchone()
     bdd2 = get_db().cursor()
-    bdd3 = get_db().cursor()
-
-    sql1 = """SELECT t.*
-              FROM type_incident t"""
-
-    sql2 = """SELECT i.*, t.*
-             FROM incident i
-             LEFT JOIN type_incident t ON i.id_type_incident = type_incident.id_type_incident
-             WHERE id_incident = %s"""
-
-    sql3 = """SELECT bus.*
-              FROM bus"""
-
-    bdd1.execute(sql1)
-    bdd2.execute(sql2, [id_incident])
-    bdd3.execute(sql3)
-
-    type_incident = bdd1.fetchall()
-    incident = bdd2.fetchone()
-    bus = bdd3.fetchall()
-    return render_template('revision/edit_revision.html', type_incident=type_incident, incident=incident, bus=bus)
+    sql2 = """SELECT reservoir.*
+              FROM reservoir""" 
+    bdd2.execute(sql2)
+    reservoir = bdd2.fetchall()
+    return render_template('revision/edit_revision.html', revision=revision, reservoir=reservoir)
 
 @app.route('/revision/edit', methods=['POST'])
 def valid_edit_revision():
     bdd = get_db().cursor()
-    id_incident = request.form.get('id', '')
-    dateIncident = request.form.get('date-incident', '')
-    idBus = request.form.get('id-bus', '')
-    idTypeIncident = request.form.get('id-type-incident', '')
-    sql = """UPDATE incident 
-             SET date_incident = %s,
-             id_bus = %s,
-             id_type_incident = %s
-             WHERE id_incident = %s"""
-    bdd.execute(sql, [dateIncident, idBus, idTypeIncident, id_incident])
+    id_revision = request.form.get('id', '')
+    descriptifRevision = request.form.get('descriptif-revision', '')
+    dateRevision = request.form.get('date-revision', '')
+    idReservoir = request.form.get('id-reservoir', '')
+    sql = """UPDATE revision 
+             SET descriptif_revision = %s,
+             date_revision = %s,
+             id_reservoir = %s
+             WHERE id_revision = %s"""
+    bdd.execute(sql, [descriptifRevision, dateRevision, idReservoir, id_revision])
     get_db().commit()
-    message = u'Incident modifié, ID: ' + id_incident + ", Date de l'incident: " + dateIncident + ', Bus: ' + idBus + ', Type d\'incident: ' + idTypeIncident
+    message = u'Révision modifiée, ID: ' + id_revision + ", Descriptif: " + descriptifRevision + ', Date: ' + dateRevision + ', ID Réservoir: ' + idReservoir
     flash(message, 'alert-warning')
     return redirect('/revision/show')
 
 @app.route('/revision/delete', methods=['GET'])
 def delete_revision():
-    id_incident = request.args.get('id', '')
+    id_revision = request.args.get('id', '')
     bdd = get_db().cursor()
-    sql = "DELETE FROM incident WHERE id_incident = %s"
-    bdd.execute(sql, id_incident)
+    sql = "DELETE FROM revision WHERE id_revision = %s"
+    bdd.execute(sql, id_revision)
     get_db().commit()
-    message = u'Incident supprimé, ID: ' + id_incident
+    message = u'Révision supprimée, ID: ' + id_revision
     flash(message, 'alert-danger')
     return redirect('/revision/show')
 
@@ -432,6 +531,31 @@ def valid_add_type_incident():
     flash(message, 'alert-success')
     return redirect('/type_incident/show')
 
+@app.route('/type_incident/edit', methods=['GET'])
+def edit_type_incident():
+    id_type_incident = request.args.get('id', '')
+    bdd = get_db().cursor()
+    sql = """SELECT type_incident.*
+             FROM type_incident
+             WHERE id_type_incident = %s"""
+    bdd.execute(sql, [id_type_incident])
+    type_incident = bdd.fetchone()
+    return render_template('type_incident/edit_type_incident.html', type_incident=type_incident)
+
+@app.route('/type_incident/edit', methods=['POST'])
+def valid_edit_type_incident():
+    bdd = get_db().cursor()
+    id_type_incident = request.form.get('id', '')
+    libelleType = request.form.get('libelle-type', '')
+    sql = """UPDATE type_incident 
+             SET infos_type_incident = %s
+             WHERE id_type_incident = %s"""
+    bdd.execute(sql, [libelleType, id_type_incident])
+    get_db().commit()
+    message = u'Type d\'incident modifié, ID: ' + id_type_incident + ", Libellé: " + libelleType
+    flash(message, 'alert-warning')
+    return redirect('/type_incident/show')
+
 @app.route('/type_incident/delete', methods=['GET'])
 def delete_type_incident():
     id_type_incident = request.args.get('id', '')
@@ -492,150 +616,3 @@ def delete_kilometrage():
     message = u'Kilometrage supprimé, ID: ' + id_kilometrage
     flash(message, 'alert-danger')
     return redirect('/kilometrage/show')
-
-    
-# @app.route('/tableaux/card')
-# def show_cards():
-#     bdd = get_db().cursor()
-#     sql = "SELECT id_tableau AS id, \
-#               nom_tableau AS nom, \
-#               prix_assurance AS prixAssurance, \
-#               date_realisation AS dateRealisation, \
-#               peintre, \
-#               localisation_musee AS localisationMusee, \
-#               photo, \
-#               mouvement, \
-#               type_epoque_id AS typeEpoque_id \
-#               FROM tableau \
-#               ORDER BY id_tableau"
-
-#     bdd.execute(sql)
-#     tableau = bdd.fetchall()
-#     return render_template('tableaux/card_tableaux.html', tableaux=tableau)
-
-
-# @app.route('/tableaux/add', methods=['GET'])
-# def add_tableau():
-#     bdd = get_db().cursor()
-#     sql = "SELECT id_type_epoque, libelle FROM type_epoque ORDER BY id_type_epoque"
-#     bdd.execute(sql)
-#     type_epoque = bdd.fetchall()
-#     return render_template('tableaux/add_tableau.html', typeEpoque=type_epoque)
-
-
-# @app.route('/tableaux/add', methods=['POST'])
-# def valid_add_tableau():
-#     nom = request.form.get('nom', '')
-#     prixAssurance = request.form.get('prixAssurance', '')
-#     dateRealisation = request.form.get('dateRealisation', '')
-#     peintre = request.form.get('peintre', '')
-#     localisationMusee = request.form.get('localisationMusee', '')
-#     photo = request.form.get('photo', '')
-#     mouvement = request.form.get('mouvement', '')
-#     typeEpoque_id = request.form.get('typeEpoque_id', '')
-
-#     bdd = get_db().cursor()
-#     sql = "INSERT INTO tableau( \
-#               nom_tableau, \
-#               prix_assurance, \
-#               date_realisation, \
-#               peintre, \
-#               localisation_musee, \
-#               photo, \
-#               mouvement, \
-#               type_epoque_id) \
-#               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-#     bdd.execute(sql, [nom, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id])
-#     get_db().commit()
-#     message = u'Article ajouté, Nom: '+nom + ', Prix assurance: ' + prixAssurance + '€, Date réalisation: ' + dateRealisation + ', Peintre: '+ peintre + ', Musée: ' + localisationMusee + ', Photo: ' + photo + ', Mouvement: ' + mouvement + ', Type Epoque ID: ' + typeEpoque_id
-#     flash(message, 'alert-success')
-#     return redirect('/tableaux/show')
-
-
-# @app.route('/tableaux/delete', methods=['GET'])
-# def delete_tableau():
-#     id_tableau = request.args.get('id', '')
-#     bdd = get_db().cursor()
-#     sql = "DELETE FROM tableau WHERE id_tableau = %s"
-#     bdd.execute(sql)
-#     get_db().commit()
-#     message = u'Un tableau supprimé, Nom: ' + id_tableau
-#     flash(message, 'alert-danger')
-#     return redirect('/tableaux/show')
-
-
-# @app.route('/tableaux/edit', methods=['GET'])
-# def edit_tableau():
-#     id = request.args.get('id', '')
-#     id = int(id)
-#     tableaux = tableauTab[id-1]
-#     return render_template('tableaux/edit_tableau.html', tableau=tableaux, typeEpoque=typeEpoque)
-
-
-# @app.route('/tableaux/edit', methods=['POST'])
-# def valid_edit_tableau():
-#     nom = request.form['nom']
-#     prixAssurance = request.form.get('prixAssurance', '')
-#     dateRealisation = request.form.get('dateRealisation', '')
-#     peintre = request.form.get('peintre', '')
-#     localisationMusee = request.form.get('localisationMusee', '')
-#     mouvement = request.form.get('mouvement', '')
-#     typeEpoque_id = request.form.get('typeEpoque_id', '')
-#     message = u'Tableau modifié, Nom: ' + nom + ", Prix de l'assurance: " + prixAssurance + '€, Date de réalisation: ' + dateRealisation + ', Peintre: ' + peintre + ', Musée: ' + localisationMusee + ', Mouvement: ' + mouvement + ', ID Epoque: ' + typeEpoque_id
-#     flash(message, 'alert-warning')
-#     return redirect('/tableaux/show')
-
-
-# @app.route('/type_epoque/show')
-# def show_type_epoque():
-#     bdd = get_db().cursor()
-#     sql = "SELECT id_type_epoque AS id, libelle FROM type_epoque ORDER BY id_type_epoque"
-#     bdd.execute(sql)
-#     type_epoque = bdd.fetchall()
-#     return render_template('type_epoque/show_type_epoque.html', typeEpoque=type_epoque)
-
-
-# @app.route('/type_epoque/add', methods=['GET'])
-# def add_type_epoque():
-#     return render_template('type_epoque/add_type_epoque.html')
-
-
-# @app.route('/type_epoque/add', methods=['POST'])
-# def valid_add_type_epoque():
-#     libelle = request.form.get('libelle', '')
-#     bdd = get_db().cursor()
-#     sql = "INSERT INTO type_epoque(libelle) VALUES (%s)"
-#     bdd.execute(sql, [libelle])
-#     get_db().commit()
-#     message = u'Type ajouté, Libellé: ' + libelle
-#     flash(message, 'alert-success')
-#     return redirect('/type_epoque/show')
-
-
-# @app.route('/type_epoque/delete', methods=['GET'])
-# def delete_type_article():
-#     id = request.args.get('id', '')
-#     message = u'Type d\'époque supprimé, Libellé: ' + id
-#     flash(message, 'alert-danger')
-#     return redirect('/type_epoque/show')
-
-
-# @app.route('/type_epoque/edit', methods=['GET'])
-# def edit_type_article():
-#     id = request.args.get('id', '')
-#     id = int(id)
-#     type_epoque = typeEpoque[id-1]
-#     return render_template('type_epoque/edit_type_epoque.html', type_epoque=type_epoque)
-
-
-# @app.route('/type_epoque/edit', methods=['POST'])
-# def valid_edit_type_article():
-#     libelle = request.form['libelle']
-#     id = request.form.get('id', '')
-#     message=u"Type d'époque modifié, ID: " + id + ", Libellé: " + libelle
-#     flash(message, 'alert-warning')
-#     return redirect('/type_epoque/show')
-
-
-# if __name__ == '__main__':
-#     app.run()

@@ -9,7 +9,6 @@
   {% if error %}
     <p class=error><strong>Error:</strong> {{ error }}
   {% endif %}
-  {{ incident }}
   <form method="post" action="/incident/edit">
     <fieldset>
         <div class="container formulaire w-75 margin-top-40">
@@ -36,7 +35,7 @@
                 </div>
 
                 <div class="form-group row margin-bot">
-                    <label for="id-type-incident" class="col-sm-3 col-form-label margin-left">ID Type Incident</label>
+                    <label for="id-type-incident" class="col-sm-3 col-form-label margin-left">Type Incident</label>
                     <div class="col-sm-6">
                         <select id="id-type-incident" class="form-control" name="id-type-incident" required>
                             <option value="{{ incident.id_type_incident }}">{{ incident.infos_type_incident }}</option>

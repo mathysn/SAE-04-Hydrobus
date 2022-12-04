@@ -1,42 +1,41 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Modifier un incident</title>
+    <title>Modifier une révision</title>
 {% endblock %}
 
 {% block body %}
-  <h2 class="text-align-center">Modifier un incident</h2>
+  <h2 class="text-align-center">Modifier une révision</h2>
   {% if error %}
     <p class=error><strong>Error:</strong> {{ error }}
   {% endif %}
-  {{ revision }}
-  <form method="post" action="/incident/edit">
+  <form method="post" action="/revision/edit">
     <fieldset>
         <div class="container formulaire w-75 margin-top-40">
             <div class="border rounded w-50">
                 <legend>Révision</legend>
-                <input type="hidden" name="id" value="{{ incident.id_incident }}">
+                <input type="hidden" name="id" value="{{ revision.id_revision }}">
                 <div class="form-group row margin-bot">
-                    <label for="descriptif" class="col-sm-3 col-form-label margin-left">Descriptif</label>
+                    <label for="descriptif-revision" class="col-sm-3 col-form-label margin-left">Descriptif</label>
                     <div class="col-sm-6">
-                        <input id="descriptif" class="form-control" type="text" name="descriptif" size="18" value="{{ revision.descriptif_revision }}">
+                        <input id="descriptif-revision" class="form-control" type="text" name="descriptif-revision" size="18" value="{{ revision.descriptif_revision }}">
                     </div>
                 </div>
 
                 <div class="form-group row margin-bot">
-                    <label for="date-incident" class="col-sm-3 col-form-label margin-left">Date d'incident</label>
+                    <label for="date-revision" class="col-sm-3 col-form-label margin-left">Date</label>
                     <div class="col-sm-6">
-                        <input id="date-incident" class="form-control" type="date" name="date-incident" size="18" value="{{ incident.date_incident }}">
+                        <input id="date-revision" class="form-control" type="date" name="date-revision" size="18" value="{{ revision.date_revision }}">
                     </div>
                 </div>
 
                 <div class="form-group row margin-bot">
-                    <label for="id-type-incident" class="col-sm-3 col-form-label margin-left">ID Type Incident</label>
+                    <label for="id-reservoir" class="col-sm-3 col-form-label margin-left">ID Réservoir</label>
                     <div class="col-sm-6">
-                        <select id="id-type-incident" class="form-control" name="id-type-incident" required>
-                            <option value="{{ incident.id_type_incident }}">{{ incident.infos_type_incident }}</option>
-                            {% for t in type_incident %}
-                                <option value="{{ t.id_type_incident }}"> {{ t.infos_type_incident }} </option>
+                        <select id="id-reservoir" class="form-control" name="id-reservoir" required>
+                            <option value="{{ revision.id_reservoir }}">{{ revision.id_reservoir }}</option>
+                            {% for r in reservoir %}
+                                <option value="{{ r.id_reservoir }}"> {{ r.id_reservoir }} </option>
                             {% endfor %}
                         </select>
                     </div>

@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Modifier un réservoir</title>
+{% endblock %}
+
+{% block body %}
+  <h2 class="text-align-center">Modifier un réservoir</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form method="post" action="/reservoir/edit">
+    <fieldset>
+        <div class="container formulaire w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Réservoir</legend>
+                <input type="hidden" name="id" value="{{ reservoir.id_reservoir }}">
+                <div class="form-group row margin-bot">
+                    <label for="volume" class="col-sm-3 col-form-label margin-left">Volume (L)</label>
+                    <div class="col-sm-6">
+                        <input id="volume" class="form-control" type="text" name="volume" size="18" value="{{reservoir.volume_reservoir}}">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="code-modele" class="col-sm-3 col-form-label margin-left">Modèle</label>
+                    <div class="col-sm-6">
+                        <select id="code-modele" class="form-control" name="code-modele" required>
+                            <option value="{{ reservoir.code_modele }}">{{ reservoir.libelle_modele }}</option>
+                            {% for m in modele %}
+                                <option value="{{ m.code_modele}} "> {{ m.libelle_modele }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Editer" name="Editer">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+  </form>
+{% endblock %}

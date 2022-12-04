@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Modifier un modèle</title>
+{% endblock %}
+
+{% block body %}
+  <h2 class="text-align-center">Modifier un modèle</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form method="post" action="/modele/edit">
+    <fieldset>
+        <div class="container formulaire w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Modèle</legend>
+                <input type="hidden" name="id" value="{{ modele.code_modele }}">
+                <div class="form-group row margin-bot">
+                    <label for="libelle-modele" class="col-sm-3 col-form-label margin-left">Libellé</label>
+                    <div class="col-sm-6">
+                        <input id="libelle-modele" class="form-control" type="text" name="libelle-modele" size="18" value="{{ modele.libelle_modele }}">
+                    </div>
+                </div>
+
+                <div class="form-group row margin-bot">
+                    <label for="infos-modele" class="col-sm-3 col-form-label margin-left">Informations</label>
+                    <div class="col-sm-6">
+                        <input id="infos-modele" class="form-control" type="text" name="infos-modele" size="18" value="{{ modele.infos_modele }}">
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Editer" name="Editer">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+  </form>
+{% endblock %}

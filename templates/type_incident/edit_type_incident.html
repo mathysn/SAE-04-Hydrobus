@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Modifier un type d'incident</title>
+{% endblock %}
+
+{% block body %}
+  <h2 class="text-align-center">Modifier un type d'incident</h2>
+  {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
+  <form method="post" action="/type_incident/edit">
+    <fieldset>
+        <div class="container formulaire w-75 margin-top-40">
+            <div class="border rounded w-50">
+                <legend>Type d'incident</legend>
+                <input type="hidden" name="id" value="{{ type_incident.id_type_incident }}">
+                <div class="form-group row margin-bot">
+                    <label for="libelle-type" class="col-sm-3 col-form-label margin-left">Libellé</label>
+                    <div class="col-sm-6">
+                        <input id="libelle-type" class="form-control" type="text" name="libelle-type" size="18" value="{{ type_incident.infos_type_incident }}">
+                    </div>
+                </div>
+                <br>
+                <div class="col text-center margin-bot">
+                    <input class="btn btn-primary" type="submit" value="Editer" name="Editer">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+  </form>
+{% endblock %}

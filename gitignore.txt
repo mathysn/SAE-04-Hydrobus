@@ -1,8 +1,0 @@
-mysql --user=mnourry3 --password=2909 --host=localhost  BDD_mnourry3  --local_infile
-
-.idea
-.venv
-/shelf/
-/workspace.xml
-/dataSources/
-/dataSources.local.xml
