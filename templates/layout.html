@@ -26,14 +26,29 @@
         {% endwith %}
 
         {% block body %}
-            <h1 style="margin: 50px; color: rgb(86, 89, 255);">
-                Accueil<br>
-                
-            </h1>
+            <div class="container w-75">
+                <h1 class="text-center m-auto" style="color: rgb(86, 89, 255);">Accueil</h1>
+
+                <h3 style="color: rgb(86, 89, 255); padding-top: 15px;">Introduction</h3>
+                <p>
+                    Ce projet a été mené par Mathys, Tom, Lucas et Ewan.
+                </p>
+
+                <h3 style="color: rgb(86, 89, 255); padding-top: 15px;">Tables</h3>
+                <p>
+                    Il y a en tout 7 tables SQL affichées sous la forme de tableaux, elles ont toutes un lien direct ou indirect.<br>
+                    Il est possible d'ajouter, de modifier et de supprimer des valeurs sur toutes les tables.
+                </p>
+
+                <h3 style="color: rgb(86, 89, 255); padding-top: 15px;">Etats</h3>
+                <p>
+                    Les 4 requêtes d'état sont contenues dans la table "Bus" et la table "Réservoir". Il y en a 4 mais sur seulement 2 tables.
+                </p>
+
+            </div>
         {% endblock %}
         {% block javascripts %}
             <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
         {% endblock %}
-        {% include('footer.html') %}
     </body>
 </html>
